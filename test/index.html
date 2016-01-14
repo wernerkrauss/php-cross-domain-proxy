@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" /> 
+	<title>PHP Cross Domain Proxy test page</title>
+
+	<style type="text/css">
+		html {font-family: sans-serif;}
+		body {margin: .5em 2em;}
+	</style>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.js"></script>
+	<script>
+		$(function()
+		{
+			$(document).ajaxSend(onAjaxSend);
+		});
+
+		function onAjaxSend(event, jqxhr, options)
+		{
+			//if(options.crossDomain)
+			{
+				jqxhr.setRequestHeader('X-Proxy-URL', options.url);
+				options.url = '../proxy.php';
+				options.url += '?_='+Date.now();
+			}
+		}
+	</script>
+</head>
+<body>
+	<h1>PHP Cross Domain Proxy test page</h1>
+	<p>A "jQuery enabled" test page where you can use the browser developer console to test.</p>
+	<p><em>All</em> requests will be passed to the proxy so it can be tested even though requests aren't <em>actually</em> cross-domain.</p>
+
+
+	<h2>Examples</h2>
+	<pre class="prettyprint" style="border:0;padding:0">
+// GET, no parameters
+$.ajax({
+    url: 'http://localhost/php-cross-domain-proxy/test/echo.php',
+})
+
+// GET, with custom header and some parameters using both url and data property
+$.ajax({
+    method: 'GET',
+    url: 'http://localhost/php-cross-domain-proxy/test/echo.php?c=3',
+    data: {a:1, b:2},
+    headers: {
+    	'X-TestRequestHeader': 'Fluffy bunny',
+    },
+})
+
+// POST, with both post data in property and a get parameter in the url
+$.ajax({
+    method: 'POST',
+    url: 'http://localhost/php-cross-domain-proxy/test/echo.php?c=3',
+    data: {a:1, b:2},
+})
+
+// PUT, with data encoded as json
+$.ajax({
+    method: 'PUT',
+    url: 'http://localhost/php-cross-domain-proxy/test/echo.php',
+    contentType: 'application/json',
+    data: JSON.stringify({a:1, b:2}),
+})
+
+// DELETE, with get parameter
+$.ajax({
+    method: 'DELETE',
+    url: 'http://localhost/php-cross-domain-proxy/test/echo.php?id=1',
+})
+
+</pre>
+
+</body>
+</html>

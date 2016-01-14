@@ -1,50 +1,104 @@
-PHP Cross Domain (AJAX) Proxy
-==============
+PHP Cross Domain Proxy
+===
 
-An application proxy that can be used to transparently transfer all kind of requests ( including of course XMLHTTPRequest ) to any third part domain. It is possible to define a list of acceptable third party domains and you are encouraged to do so. Otherwise the proxy is open to any kind of requests.
+Client-side HTTP requests, are limited by browser cross-origin restrictions.
 
-If it is possible to enable CORS on your application server, this proxy is not necessary. Have a look at [how you can enable CORS on your server](http://enable-cors.org/server.html) for further information.
+Preferably fixed by [enabling CORS](http://enable-cors.org/server.html) on the server you're trying to call, but sometimes this just isn't possible because reasons.
+
+A simple workaround is having a proxy on the same domain as your client-side script and let it do these cross-domain requests server-side instead.
+
+The script here, `proxy.php`, is such a script.
+
+
 
 Installation
---------------
+---
 
-The proxy is indentionally limited to a single file. All you have to do is to place `proxy.php` under your application
+Since `proxy.php` is completely self-contained, you can just copy it into your web application directly, edit the $whitelist array, and you're good to go.
 
-Whenever you want to make a cross domain request, just make a request to http://www.yourdomain.com/proxy.php and specify the cross domain URL by using `csurl` parameter. Obviously, you can add more parameters according to your needs; note that the rest of the parameters will be used in the cross domain request. For instance, if you are using jQuery:
+However, if you're using [Composer](http://getcomposer.org), you can also add
+the following dependency to your `composer.json`:
 
-``` JAVASCRIPT
-$('#target').load(
-	'http://www.yourdomain.com/proxy.php', {
-		csurl: 'http://www.cross-domain.com/',
-		param1: value1, 
-		param2: value2
-	}
-);
+``` JSON
+"require":
+{
+	"geekality/php-cross-domain-proxy": "1.*"
+},
 ```
 
-It’s worth mentioning that all request methods are working GET, PUT, POST, DELETE are working and headers are taken into consideration. That is to say, headers sent from browser to proxy are used in the cross domain request and vice versa.
+And then, for example, add your own `proxy.php` like this:
 
-You can also specify the URL with the `X-Proxy-URL` header, which might be easier to set with your JavaScript library. For example, if you wanted to automatically use the proxy for external URL targets, for GET and POST requests:
+``` PHP
+	<?php
+	
+		$whitelist = ['www.example.com', 'api.example.com'];
+		require 'vendor/geekality/php-cross-domain-proxy/proxy.php';
+
+```
+
+
+Usage
+---
+
+On the client-side, when performing cross-origin requests:
+
+1. Make `url` point to the `proxy.php` script
+2. Set the HTTP header `X-Proxy-URL` to whatever URL you're calling, for example `http://api.example.com/some/path`
+
+All parameters and HTTP headers (except `Cookie`, `Host` and `X-Proxy-URL`) will be used to recreate the request and performed server-side by the proxy. When complete it will mirror the response, including headers, and return it to the client-side script more or less as if it had been called directly.
+
+
+Using jQuery
+---
+
+**Basic GET request**
 
 ``` JAVASCRIPT
-$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-	if (options.url.match(/^https?:/)) {
-		options.headers['X-Proxy-URL'] = options.url;
-		options.url = '/proxy.php';
-	}
+$.ajax({
+    url: 'proxy.php',
+    cache: false,
+    headers: {
+        'X-Proxy-URL': 'http://api.example.com/some/path',
+    },
+})
+```
+
+**Automagic via global [`ajaxSend`](http://api.jquery.com/ajaxSend/) event**
+
+
+``` JAVASCRIPT
+$(function()
+{
+	// Hook up the event handler
+	$(document).ajaxSend(useCrossDomainProxy);
 });
+
+function useCrossDomainProxy(event, jqxhr, options)
+{
+	if(options.crossDomain)
+	{
+		// Copy URL to HTTP header
+		jqxhr.setRequestHeader('X-Proxy-URL', options.url);
+
+		// Set URL to the proxy
+		options.url = 'proxy.php';
+
+		// Since all cross-origin URLs will now look the same to the browser, 
+		// you can add a timestamp, which will prevent browser caching.
+		options.url += '?_='+Date.now();
+	}
+}
+
+// Later, somewhere else, it's now much cleaner to do a cross-origin request
+$.ajax({
+	url: 'proxy.php',
+    data: {a:1, b:2},
+})
+
 ```
 
-Configuration
---------------
+When using `cache:false` jQuery adds a `_` GET parameter to the URL with the current timestamp to prevent the browser from returning a cached response. This happens *before* the `ajaxSend` event, so in the above case, if you had set `cache:false`, that `_` parameter would just be "moved" to the `X-Proxy-URL` header and no longer have any effect. So instead, leave `cache` at its default value `true`, and add the parameter manually to the proxy url instead.
 
-For security reasons don't forget to define all the valid requests into top section of `proxy.php` file:
+**More?**
 
-``` JAVASCRIPT
-$valid_requests = array(
-	'http://www.domainA.com/',
-	'http://www.domainB.com/path-to-services/service-a'
-);
-```
-
- 
+Some more examples can be found in [test/index.html](test/index.html).
