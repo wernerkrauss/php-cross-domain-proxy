@@ -14,19 +14,22 @@ The script here, `proxy.php`, is such a script.
 Installation
 ---
 
-Since `proxy.php` is completely self-contained, you can just copy it into your web application directly, edit the $whitelist array, and you're good to go.
+Since `proxy.php` is completely self-contained, you can just
+1. Copy `proxy.php` into your web application
+2. Edit the $whitelist array
+3. And that's pretty much it
 
-However, if you're using [Composer](http://getcomposer.org), you can also add
+If using [Composer](http://getcomposer.org), you can also add
 the following dependency to your `composer.json`:
 
 ``` JSON
 "require":
 {
-	"geekality/php-cross-domain-proxy": "1.*"
+	"geekality/php-cross-domain-proxy": "dev-master"
 },
 ```
 
-And then, for example, add your own `proxy.php` like this:
+And then, for example, add a `proxy.php` like this:
 
 ``` PHP
 	<?php
