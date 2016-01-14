@@ -42,6 +42,13 @@ And then add a `proxy.php` like this to your web application:
 
 ```
 
+Security
+---
+
+As a simple sanity check the proxy will that the `Referer` header is set and that the hostname is the same as for the proxy. This can be easily spoofed of course, so you should also add entries to the whitelist array.
+
+If the whitelist array is empty, any requests will be accepted.
+
 
 Usage
 ---
