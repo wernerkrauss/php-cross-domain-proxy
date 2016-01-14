@@ -2,7 +2,6 @@
     "name": "geekality/php-cross-domain-proxy",
     "description": "Simple PHP proxy for proxying cross-domain ajax requests.",
     "keywords": ["php-cross-domain-proxy","cross-domain", "http", "proxy", "javascript", "ajax"],
-    "license": "MIT",
     "support": {
         "issues": "https://github.com/Svish/php-cross-domain-proxy/issues",
         "source": "https://github.com/Svish/php-cross-domain-proxy"
@@ -10,5 +9,8 @@
     "require": {
         "php": ">=5.4.0",
         "lib-curl": ">=7.36"
+    },
+    "autoload": {
+        "classmap": ["src/"]
     }
 }

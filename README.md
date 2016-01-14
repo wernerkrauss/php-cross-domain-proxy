@@ -5,9 +5,9 @@ Client-side HTTP requests, are limited by browser cross-origin restrictions.
 
 Preferably fixed by [enabling CORS](http://enable-cors.org/server.html) on the server you're trying to call, but sometimes this just isn't possible because reasons.
 
-A simple workaround is having a proxy on the same domain as your client-side script and let it do these cross-domain requests server-side instead.
+A simple workaround is having a server-side proxy script on the same domain as your client-side script (e.g. both at `api.example.com`), and let the server do these cross-domain requests on behalf of the client.
 
-The script here, `proxy.php`, is such a script.
+This is such a script.
 
 
 
@@ -29,13 +29,16 @@ the following dependency to your `composer.json`:
 },
 ```
 
-And then, for example, add a `proxy.php` like this:
+And then add a `proxy.php` like this to your web application:
 
 ``` PHP
 	<?php
-	
-		$whitelist = ['www.example.com', 'api.example.com'];
-		require 'vendor/geekality/php-cross-domain-proxy/proxy.php';
+		require 'vendor/autoload.php';
+
+		CrossOriginProxy::proxy([
+			'www.example.com',
+			'api.example.com',
+		]);
 
 ```
 
