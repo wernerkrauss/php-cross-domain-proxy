@@ -18,7 +18,7 @@ if( ! isset($curl_timeout))
 $headers = getallheaders();
 $method = __('REQUEST_METHOD', $_SERVER);
 $url = __('X-Proxy-URL', $headers);
-
+$cookie = __('X-Proxy-Cookie', $headers);
 
 // Check that we have a URL
 if( ! $url)
@@ -40,6 +40,8 @@ if( ! empty($whitelist) and ! array_reduce($whitelist, 'whitelist', [$url, false
 // Remove ignored headers and prepare the rest for resending
 $ignore = ['Cookie', 'Host', 'X-Proxy-URL'];
 $headers = array_diff_key($headers, array_flip($ignore));
+if($cookie)
+	$headers['Cookie'] = $cookie;
 foreach($headers as $key => &$value)
 	$value = "$key: $value";
 
