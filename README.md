@@ -15,12 +15,13 @@ Installation
 ---
 
 Since `proxy.php` is completely self-contained, you can just
-1. Copy `proxy.php` into your web application
-2. Edit the $whitelist array
-3. And that's pretty much it
+
+1. Copy `proxy.php` into your web application,
+2. Edit the $whitelist array,
+3. And that's pretty much it...
 
 If using [Composer](http://getcomposer.org), you can also add
-the following dependency to your `composer.json`:
+the [geekality/php-cross-domain-proxy](https://packagist.org/packages/geekality/php-cross-domain-proxy) to your `composer.json` like this:
 
 ``` JSON
 "require":
@@ -29,15 +30,14 @@ the following dependency to your `composer.json`:
 },
 ```
 
-And then add a `proxy.php` like this to your web application:
+And then for example add a `proxy.php` like this to your web application:
 
 ``` PHP
 	<?php
 		require 'vendor/autoload.php';
 
 		CrossOriginProxy::proxy([
-			'www.example.com',
-			'api.example.com',
+			['host' => 'example.com'],
 		]);
 
 ```
@@ -45,10 +45,38 @@ And then add a `proxy.php` like this to your web application:
 Security
 ---
 
-As a simple sanity check the proxy will that the `Referer` header is set and that the hostname is the same as for the proxy. This can be easily spoofed of course, so you should also add entries to the whitelist array.
+The whitelist array can contain any number of these criterias:
 
-If the whitelist array is empty, any requests will be accepted.
+- Exact paths  
+    `['http://example.com/api/specific-method']`
+- Array with single regex key  
+    `['regex' => '%^http://example.com/api/%']`
+- Array with any [parse_url](http://php.net/manual/en/function.parse-url.php) components to match  
+    `['host' => 'example.com']`  
+    `['host' => 'example.com', 'scheme' => 'https']`
 
+The requested URL must match at least one of the whitelisted criterias to be accepted, otherwise a 403 will be returned. An empty whitelist will accept any requests.
+
+**An example using all types**
+
+``` PHP
+<?php
+
+require 'vendor/autoload.php';
+
+CrossOriginProxy::proxy([
+	// Exact matching
+	['http://www.yr.no/place/Sweden/Stockholm/Stockholm/forecast.xml'],
+
+	// URL component matching
+	['host' => 'localhost'],
+	['host' => 'example.com', 'scheme' => 'http'],
+
+	// Regex matching
+	['regex' => '%^http://www.yr.no/place/Norway/%'],
+]);
+
+```
 
 Usage
 ---
