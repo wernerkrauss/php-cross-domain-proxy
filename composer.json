@@ -1,6 +1,6 @@
 {
     "name": "geekality/php-cross-domain-proxy",
-    "description": "Simple PHP proxy for proxying cross-domain ajax requests.",
+    "description": "Simple self-contained PHP proxy for cross domain ajax requests.",
     "keywords": ["php-cross-domain-proxy","cross-domain", "http", "proxy", "javascript", "ajax"],
     "license": "MIT",
     "support": {
