@@ -77,19 +77,6 @@ $.ajax({
 })
 ```
 
-**Basic GET request with cookie**
-
-``` JAVASCRIPT
-$.ajax({
-    url: 'proxy.php',
-    cache: false,
-    headers: {
-        'X-Proxy-URL': 'http://example.com/api/method',
-        'X-Proxy-Cookie': 'jsessionid=AS348AF929FK219CKA9FK3B79870H;',
-    },
-})
-```
-
 **Automagic via global [`ajaxSend`](http://api.jquery.com/ajaxSend/) event**
 
 

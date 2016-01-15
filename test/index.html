@@ -36,18 +36,17 @@
 
 	<h2>Examples</h2>
 	<pre class="prettyprint" style="border:0;padding:0">
-// GET, no parameters
-$.ajax({
-    url: 'http://example.com',
-})
+// GET, plain, no nothing
+$.get('http://example.com')
 
-// GET, with custom header and some parameters using both url and data property
+// GET, with a custom header, a proxied cookie, and some parameters using both url and data property
 $.ajax({
     method: 'GET',
     url: 'http://localhost/php-cross-domain-proxy/test/echo.php?c=3',
     data: {a:1, b:2},
     headers: {
     	'X-TestRequestHeader': 'Fluffy bunny',
+        'X-Proxy-Cookie': 'jsessionid=AS348AF929FK219CKA9FK3B79870H;',
     },
 })
 
