@@ -26,7 +26,7 @@ the [geekality/php-cross-domain-proxy](https://packagist.org/packages/geekality/
 ``` JSON
 "require":
 {
-	"geekality/php-cross-domain-proxy": "dev-master"
+	"geekality/php-cross-domain-proxy": "1.*"
 },
 ```
 
