@@ -22,7 +22,7 @@
 			//if(options.crossDomain)
 			{
 				jqxhr.setRequestHeader('X-Proxy-URL', options.url);
-				options.url = '../proxy.php';
+				options.url = 'proxy.php';
 				options.url += '?_='+Date.now();
 			}
 		}
@@ -38,7 +38,7 @@
 	<pre class="prettyprint" style="border:0;padding:0">
 // GET, no parameters
 $.ajax({
-    url: 'http://localhost/php-cross-domain-proxy/test/echo.php',
+    url: 'http://example.com',
 })
 
 // GET, with custom header and some parameters using both url and data property
