@@ -4,6 +4,7 @@
     "keywords": ["php-cross-domain-proxy","cross-domain", "http", "proxy", "javascript", "ajax"],
     "license": "MIT",
     "support": {
+        "docs": "https://github.com/Svish/php-cross-domain-proxy/blob/master/README.md",
         "issues": "https://github.com/Svish/php-cross-domain-proxy/issues",
         "source": "https://github.com/Svish/php-cross-domain-proxy"
     },
