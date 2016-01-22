@@ -17,12 +17,12 @@ if( ! isset($curl_timeout))
 // Get stuff
 $headers = getallheaders();
 $method = __('REQUEST_METHOD', $_SERVER);
-$url = __('X-Proxy-URL', $headers);
+$url = __('X-Proxy-Url', $headers);
 $cookie = __('X-Proxy-Cookie', $headers);
 
 // Check that we have a URL
 if( ! $url)
-	http_response_code(400) and exit("X-Proxy-URL header missing");
+	http_response_code(400) and exit("X-Proxy-Url header missing");
 
 // Check that the URL looks like an absolute URL
 if( ! parse_url($url, PHP_URL_SCHEME))
@@ -30,7 +30,7 @@ if( ! parse_url($url, PHP_URL_SCHEME))
 
 // Check referer hostname
 if( ! parse_url(__('Referer', $headers), PHP_URL_HOST) == $_SERVER['HTTP_HOST'])
-	http_response_code(403) and exit("Referer mismatch");
+	http_response_code(403) and exit("Invalid referer");
 
 // Check whitelist, if not empty
 if( ! empty($whitelist) and ! array_reduce($whitelist, 'whitelist', [$url, false]))

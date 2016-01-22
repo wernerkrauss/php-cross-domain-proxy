@@ -21,7 +21,7 @@
 		{
 			//if(options.crossDomain)
 			{
-				jqxhr.setRequestHeader('X-Proxy-URL', options.url);
+				jqxhr.setRequestHeader('X-Proxy-Url', options.url);
 				options.url = 'proxy.php';
 				options.url += '?_='+Date.now();
 			}
