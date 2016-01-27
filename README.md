@@ -1,4 +1,4 @@
-PHP Cross Domain Proxy
+PHP Cross-Origin Proxy
 ===
 
 Client-side HTTP requests, are limited by browser cross-origin restrictions.
@@ -97,7 +97,7 @@ function useCrossDomainProxy(event, jqxhr, options)
 		// Set URL to the proxy
 		options.url = 'proxy.php';
 
-		// Since all cross-origin URLs will now look the same to the browser, 
+		// Since all cross-origin URLs will now look the same to the browser,
 		// you can add a timestamp, which will prevent browser caching.
 		options.url += '?_='+Date.now();
 	}
@@ -163,4 +163,3 @@ Cookies sent to the proxy will be ignored, since the browser will send the ones 
 If a request requires a certain cookie set, for example a session id, you can set the `X-Proxy-Cookie` header which is then used as `Cookie` header by the proxy.
 
     X-Proxy-Cookie: jsessionid=AS348AF929FK219CKA9FK3B79870H;
-

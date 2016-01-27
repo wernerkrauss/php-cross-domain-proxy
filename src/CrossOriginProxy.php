@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cross origin request proxy for client-side scripts.
+ * Cross-origin request proxy for client-side scripts.
  *
  * @see https://github.com/Svish/php-cross-domain-proxy
  */
