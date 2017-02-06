@@ -13,7 +13,7 @@ if( ! $url)
 
 // Check that the URL looks like an absolute URL
 if( ! parse_url($url, PHP_URL_SCHEME))
-	failure(403, "Not an absolute URL: $url");
+	failure(400, "Not an absolute URL: $url");
 
 // Check referer hostname
 if( ! parse_url($headers['Referer'] ?? null, PHP_URL_HOST) == $_SERVER['HTTP_HOST'])
