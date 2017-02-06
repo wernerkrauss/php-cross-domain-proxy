@@ -90,6 +90,7 @@ ob_start('ob_gzhandler');
 
 // Output headers
 $header = substr($out, 0, $info['header_size']);
+$header = preg_replace('/^Set-Cookie:/im', 'X-Proxy-Set-Cookie:', $header);
 array_map('header', explode("\r\n", $header));
 
 // And finally the body
