@@ -34,23 +34,24 @@ foreach($headers as $key => &$value)
 
 // Init curl
 $curl = curl_init();
+$maxredirs = $opts[CURLOPT_MAXREDIRS] ?? 20;
 do
 {
 	// Set generic options
 	curl_setopt_array($curl, [
 			CURLOPT_URL => $url,
 			CURLOPT_HTTPHEADER => $headers,
-			CURLOPT_HEADER => TRUE,
-			CURLOPT_TIMEOUT => $curl_timeout ?? 30,
-			CURLOPT_FOLLOWLOCATION => TRUE,
-			CURLOPT_MAXREDIRS => $curl_maxredirs ?? 10,
+			CURLOPT_HEADER => true,
+		] + $opts + [
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_MAXREDIRS => $maxredirs,
 		]);
 
 	// Method specific options
 	switch($method)
 	{
 		case 'HEAD':
-			curl_setopt($curl, CURLOPT_NOBODY, TRUE);
+			curl_setopt($curl, CURLOPT_NOBODY, true);
 			break;
 
 		case 'GET':
