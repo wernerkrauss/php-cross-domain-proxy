@@ -1,0 +1,36 @@
+html {font-family: sans-serif}
+body {margin: .5em 2em}
+h2 {margin-top: 2.5em}
+pre, output
+{
+	display: block;
+	font-family: monospace;
+	white-space: pre-wrap;
+	padding: .75em 1em;
+	border: 1px solid #ccc;
+	transition: border-color 500ms ease-out;
+}
+div, output
+{
+	position: relative;	
+}
+output
+{
+	margin-top: 2em;
+}
+div
+{
+	margin-bottom: 3em;
+}
+button
+{
+	font-size: large;
+	position: absolute;
+	padding: 0;
+	right: -1rem;
+	top: -1rem;
+}
+output, .active
+{
+	border-color: #666;
+}

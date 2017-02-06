@@ -4,41 +4,32 @@
 	<meta charset="utf-8" />
 	<title>PHP Cross-Origin Proxy test page</title>
 
-	<style type="text/css">
-		html {font-family: sans-serif;}
-		body {margin: .5em 2em;}
-	</style>
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
+	<link rel="stylesheet" type="text/css" href="index.css">
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.js"></script>
-	<script>
-		$(function()
-		{
-			$(document).ajaxSend(onAjaxSend);
-		});
-
-		function onAjaxSend(event, jqxhr, options)
-		{
-			//if(options.crossDomain)
-			{
-				jqxhr.setRequestHeader('X-Proxy-Url', options.url);
-				options.url = 'proxy.php';
-				options.url += '?_='+Date.now();
-			}
-		}
-	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="index.js" defer></script>
 </head>
-<body>
-	<h1>PHP Cross Domain Proxy test page</h1>
-	<p>A "jQuery enabled" test page where you can use the browser developer console to test.</p>
-	<p><em>All</em> requests will be passed to the proxy so it can be tested even though requests aren't <em>actually</em> cross-domain.</p>
+<body spellcheck="false">
 
+	<h1>PHP Cross Domain Proxy test page</h1>
+	<p>A "jQuery enabled" test page. Edit an example and push 🛫, or just use the browser developer console.</p>
+	<p><em>All</em> requests will be sent through the proxy even if not <em>actually</em> cross-domain, since this is a test page for that proxy.</p>
+
+	<h2>Proxy whitelist</h2>
+	<pre id="whitelist"></pre>
 
 	<h2>Examples</h2>
-	<pre class="prettyprint" style="border:0;padding:0">
+
+
+<pre contenteditable>
 // GET, plain, no nothing
 $.get('http://example.com')
+</pre>
 
+
+<pre contenteditable>
 // GET, with a custom header, a proxied cookie, and some parameters using both url and data property
 $.ajax({
     method: 'GET',
@@ -49,14 +40,20 @@ $.ajax({
         'X-Proxy-Cookie': 'jsessionid=AS348AF929FK219CKA9FK3B79870H;',
     },
 })
+</pre>
 
+
+<pre contenteditable>
 // POST, with both post data in property and a get parameter in the url
 $.ajax({
     method: 'POST',
     url: 'http://localhost/php-cross-domain-proxy/test/echo.php?c=3',
     data: {a:1, b:2},
 })
+</pre>
 
+
+<pre contenteditable>
 // PUT, with data encoded as json
 $.ajax({
     method: 'PUT',
@@ -64,14 +61,17 @@ $.ajax({
     contentType: 'application/json',
     data: JSON.stringify({a:1, b:2}),
 })
+</pre>
 
+
+<pre contenteditable>
 // DELETE, with get parameter
 $.ajax({
     method: 'DELETE',
     url: 'http://localhost/php-cross-domain-proxy/test/echo.php?id=1',
 })
-
 </pre>
+
 
 </body>
 </html>

@@ -16,6 +16,14 @@ $whitelist = [
 	['regex' => '%^http://www.yr.no/place/Norway/%'],
 ];
 
+// For the test page
+if(isset($_GET['whitelist']))
+{
+	header("content-type: text/plain; charset=utf-8");
+	preg_match('/\$whitelist = [^;]+;/sm', file_get_contents(__FILE__), $m);
+	echo $m[0];
+	return;
+}
 
 // Call/Use the proxy
 Geekality\CrossOriginProxy::proxy($whitelist);

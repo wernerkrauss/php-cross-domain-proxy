@@ -8,6 +8,7 @@ $info = [
     'headers' => getallheaders(),
 ];
 
+header_remove();
 ob_start('ob_gzhandler');
 header('Content-Type: application/json; charset=utf-8');
 header('X-TestHeader: This header should come back through');
