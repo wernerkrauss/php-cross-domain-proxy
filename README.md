@@ -105,13 +105,14 @@ function useCrossDomainProxy(event, jqxhr, options)
 
 // Later, somewhere else, it's now much cleaner to do a cross-origin request
 $.ajax({
-	url: 'proxy.php',
-    data: {a:1, b:2},
+	method: 'POST',
+	url: 'http://example.com/some-api',
+	data: {name: 'Alice', age: 17},
 })
 
 ```
 
-When using `cache:false` jQuery adds a `_` GET parameter to the URL with the current timestamp to prevent the browser from returning a cached response. This happens *before* the `ajaxSend` event, so in the above case, if you had set `cache:false`, that `_` parameter would just be "moved" to the `X-Proxy-URL` header and no longer have any effect. So instead, leave `cache` at its default value `true`, and add the parameter manually to the proxy url instead.
+When using `cache:false` jQuery adds a `_` GET parameter to the URL with the current timestamp to prevent the browser from returning a cached response. This happens *before* the `ajaxSend` event, so in the above case, if you had set `cache:false`, that `_` parameter would just be "moved" to the `X-Proxy-URL` header and no longer have any effect. Instead, leave `cache` at its default value `true`, and add the parameter manually to the proxy url instead, like in the example above.
 
 *Some more examples can be found in [test/index.html](test/index.html).*
 
