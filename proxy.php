@@ -42,7 +42,7 @@ do
 			CURLOPT_URL => $url,
 			CURLOPT_HTTPHEADER => $headers,
 			CURLOPT_HEADER => true,
-		] + $opts + [
+		] + ($opts??[]) + [
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_MAXREDIRS => $maxredirs,
 		]);
