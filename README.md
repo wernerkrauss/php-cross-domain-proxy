@@ -69,11 +69,11 @@ Usage with jQuery
 
 ``` JAVASCRIPT
 $.ajax({
-    url: 'proxy.php',
-    cache: false,
-    headers: {
-        'X-Proxy-URL': 'http://example.com/api/method',
-    },
+	url: 'proxy.php',
+	cache: false,
+	headers: {
+		'X-Proxy-URL': 'http://example.com/api/method',
+	},
 })
 ```
 
@@ -124,12 +124,12 @@ Security
 The hostname of the referer is checked, but can be easily spoofed, so the whitelist array should be put to good use. Fill it with any number of the following types of criterias:
 
 - Exact paths  
-    `['http://example.com/api/specific-method']`
+	`['http://example.com/api/specific-method']`
 - Array with single regex key  
-    `['regex' => '%^http://example.com/api/%']`
+	`['regex' => '%^http://example.com/api/%']`
 - Array with any [parse_url](http://php.net/manual/en/function.parse-url.php) components to match  
-    `['host' => 'example.com']`  
-    `['host' => 'example.com', 'scheme' => 'https']`
+	`['host' => 'example.com']`  
+	`['host' => 'example.com', 'scheme' => 'https']`
 
 The requested URL must match at least one of the whitelisted criterias to be accepted, otherwise a 403 will be returned. The whitelist can also be set to an empty array to allow any URLs.
 
@@ -159,13 +159,20 @@ CrossOriginProxy::proxy([
 Cookies
 ---
 
-Cookies sent to the proxy will be ignored, since the browser will send the ones meant for the domain of the proxy, and not the cookies meant for the proxied resource. So, if a request requires a certain cookie set, for example a session id, you can set the `X-Proxy-Cookie` header which is then used as `Cookie` header by the proxy. 
+Cookies sent to the proxy will be ignored, since the browser will send the ones meant for the domain of the proxy, and not the cookies meant for the proxied resource.
+
+If a request needs a cookie set, for example a session id, you can set the `X-Proxy-Cookie` header which will then be used as `Cookie` by the proxy.
+
+Similarly, any `Set-Cookie` header in the response would be eaten by the browser and not accessible, so the proxy renames any `Set-Cookie` header to `X-Proxy-Set-Cookie`.
 
 ``` JAVASCRIPT
 $.ajax({
-    url: 'https://example.com',
-    headers: {
-        'X-Proxy-Cookie': 'jsessionid=AS348AF929FK219CKA9FK3B79870H;',
-    },
+	url: 'https://example.com',
+	headers: {
+		'X-Proxy-Cookie': 'jsessionid=AS348AF929FK219CKA9FK3B79870H;',
+	},
+	success: function(data, status, jqXHR) {
+		var cookie = jqXHR.getResponseHeader('X-Proxy-Set-Cookie');
+	}
 })
 ```
