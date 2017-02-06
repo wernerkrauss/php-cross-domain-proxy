@@ -14,10 +14,8 @@
 <body spellcheck="false">
 
 	<h1>PHP Cross Domain Proxy test page</h1>
-	<p>A "jQuery enabled" test page. Edit an example and push 🛫, or just use the browser developer console.</p>
-	<p><em>All</em> requests will be sent through the proxy even if not <em>actually</em> cross-domain, since this is a test page for that proxy.</p>
-
-	<h2>Proxy whitelist</h2>
+	<p>Edit an example and push 🛫, or just use the browser developer console.</p>
+	<p>The proxy is configured with the below whitelist.</p>
 	<pre id="whitelist"></pre>
 
 	<h2>Examples</h2>
@@ -25,7 +23,7 @@
 
 <pre contenteditable>
 // GET, plain, no nothing
-$.get('http://example.com')
+$.get('https://example.com')
 </pre>
 
 

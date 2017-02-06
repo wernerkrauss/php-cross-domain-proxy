@@ -7,10 +7,10 @@ $whitelist = [
 	
 	// Exact matching
 	['http://www.yr.no/place/Sweden/Stockholm/Stockholm/forecast.xml'],
-
+	
 	// URL component matching
 	['host' => 'localhost'],
-	['host' => 'example.com', 'scheme' => 'http'],
+	['host' => 'example.com', 'scheme' => 'https'],
 	
 	// Regex matching
 	['regex' => '%^http://www.yr.no/place/Norway/%'],
