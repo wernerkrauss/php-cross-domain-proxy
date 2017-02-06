@@ -88,13 +88,22 @@ header_remove();
 // Use zlib, if acceptable
 ini_set('zlib.output_compression', $zlib ?? 'On');
 
-// Output headers
+// Get content and headers
+$content = substr($out, $info['header_size']);
 $header = substr($out, 0, $info['header_size']);
+
+// Rename Set-Cookie header
 $header = preg_replace('/^Set-Cookie:/im', 'X-Proxy-Set-Cookie:', $header);
+
+// Output headers
 array_map('header', explode("\r\n", $header));
 
-// And finally the body
-echo substr($out, $info['header_size']);
+// HACK: Prevent chunked encoding and gz issues (Issue #1)
+header_remove('Transfer-Encoding');
+header('Content-Length: '.strlen($content), true);
+
+// Output content
+echo $content;
 
 
 
