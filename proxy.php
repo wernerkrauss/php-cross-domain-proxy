@@ -25,13 +25,12 @@ if( ! array_reduce($whitelist ?? [], 'is_bad', [$url, false]))
 
 
 // Remove ignored headers and prepare the rest for resending
-$ignore = ['Cookie', 'Host', 'X-Proxy-URL'];
-$headers = array_diff_key($headers, array_flip($ignore));
+$ignore = ['cookie', 'host', 'x-proxy-url', 'x-proxy-cookie'];
+$headers = array_diff_key(array_change_key_case($headers), array_flip($ignore));
 if($cookie)
 	$headers['Cookie'] = $cookie;
 foreach($headers as $key => &$value)
-	$value = "$key: $value";
-
+	$value = ucwords($key, '-').": $value";
 
 // Init curl
 $curl = curl_init();
