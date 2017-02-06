@@ -1,5 +1,7 @@
 <?php
 
+namespace Geekality;
+
 /**
  * Cross-origin request proxy for client-side scripts.
  *
@@ -14,7 +16,7 @@ class CrossOriginProxy
 	 * @param curl_timeout    Timeout for the request.
 	 * @param curl_maxredirs  Maximum number of allowed redirects.
 	 */
-	public static function proxy($whitelist = [], $curl_timeout = 30, $curl_maxredirs = 10)
+	public static function proxy(array $whitelist = [], int $curl_timeout = 30, int $curl_maxredirs = 10)
 	{
 		require dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'proxy.php';
 	}

@@ -9,10 +9,10 @@
         "source": "https://github.com/Svish/php-cross-domain-proxy"
     },
     "require": {
-        "php": ">=5.4.0",
+        "php": "7.*",
         "lib-curl": ">=7.36"
     },
     "autoload": {
-        "classmap": ["src/"]
+        "psr-4": {"Geekality\\": "src/"}
     }
 }

@@ -1,24 +1,11 @@
 <?php
 
-
-if( ! isset($whitelist))
-	$whitelist = [];
-
-if( ! isset($curl_maxredirs))
-	$curl_maxredirs = 10;
-
-if( ! isset($curl_timeout))
-	$curl_timeout = 30;
-
-
-
-
-
 // Get stuff
 $headers = getallheaders();
-$method = __('REQUEST_METHOD', $_SERVER);
-$url = __('X-Proxy-Url', $headers);
-$cookie = __('X-Proxy-Cookie', $headers);
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$url = $headers['X-Proxy-Url'] ?? null;
+$cookie = $headers['X-Proxy-Cookie'] ?? null;
+
 
 // Check that we have a URL
 if( ! $url)
@@ -29,11 +16,11 @@ if( ! parse_url($url, PHP_URL_SCHEME))
 	http_response_code(403) and exit("Not an absolute URL: $url");
 
 // Check referer hostname
-if( ! parse_url(__('Referer', $headers), PHP_URL_HOST) == $_SERVER['HTTP_HOST'])
+if( ! parse_url($headers['Referer'] ?? null, PHP_URL_HOST) == $_SERVER['HTTP_HOST'])
 	http_response_code(403) and exit("Invalid referer");
 
 // Check whitelist, if not empty
-if( ! empty($whitelist) and ! array_reduce($whitelist, 'whitelist', [$url, false]))
+if( ! array_reduce($whitelist ?? [], 'is_bad', [$url, false]))
 	http_response_code(403) and exit("Not whitelisted: $url");
 
 
@@ -55,9 +42,9 @@ do
 			CURLOPT_URL => $url,
 			CURLOPT_HTTPHEADER => $headers,
 			CURLOPT_HEADER => TRUE,
-			CURLOPT_TIMEOUT => $curl_timeout,
+			CURLOPT_TIMEOUT => $curl_timeout ?? 30,
 			CURLOPT_FOLLOWLOCATION => TRUE,
-			CURLOPT_MAXREDIRS => $curl_maxredirs,
+			CURLOPT_MAXREDIRS => $curl_maxredirs ?? 10,
 		]);
 
 	// Method specific options
@@ -112,13 +99,7 @@ echo substr($out, $info['header_size']);
 
 
 
-// Helper functions
-function __($key, array $array, $default = null)
-{
-	return array_key_exists($key, $array) ? $array[$key] : $default;
-}
-
-function whitelist($carry, $item)
+function is_bad($carry, array $rule): bool
 {
 	static $url;
 	if(is_array($carry))
@@ -128,14 +109,14 @@ function whitelist($carry, $item)
 		$carry = $carry[1];
 	}
 
-	// Equals the full URL
-	if(isset($item[0]))
-		return $carry or $url['raw'] == $item[0];
+	// Equals full URL
+	if(isset($rule[0]))
+		return $carry or $url['raw'] == $rule[0];
 	
-	// Regex matches the full URL
-	if(isset($item['regex']))
-		return $carry or preg_match($item['regex'], $url['raw']);
+	// Regex matches URL
+	if(isset($rule['regex']))
+		return $carry or preg_match($rule['regex'], $url['raw']);
 
-	// Select components matches same components in the URL
-	return $carry or $item == array_intersect_key($url, $item);
+	// Components in rule matches same components in URL
+	return $carry or $rule == array_intersect_key($url, $rule);
 }
