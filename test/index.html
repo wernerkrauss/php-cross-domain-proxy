@@ -22,7 +22,7 @@
 
 
 <pre contenteditable>
-// GET, plain, no nothing
+// GET, plain and simple
 $.get('https://example.com')
 </pre>
 
@@ -30,13 +30,13 @@ $.get('https://example.com')
 <pre contenteditable>
 // GET, with a custom header, a proxied cookie, and some parameters using both url and data property
 $.ajax({
-    method: 'GET',
-    url: 'http://localhost/php-cross-domain-proxy/test/echo.php?c=3',
-    data: {a:1, b:2},
-    headers: {
-    	'X-TestRequestHeader': 'Fluffy bunny',
-        'X-Proxy-Cookie': 'jsessionid=AS348AF929FK219CKA9FK3B79870H;',
-    },
+	method: 'GET',
+	url: 'http://localhost/php-cross-domain-proxy/test/echo.php?c=3',
+	data: {a:1, b:2},
+	headers: {
+		'X-TestRequestHeader': 'Fluffy bunny',
+		'X-Proxy-Cookie': 'jsessionid=AS348AF929FK219CKA9FK3B79870H;',
+	},
 })
 </pre>
 
@@ -44,9 +44,9 @@ $.ajax({
 <pre contenteditable>
 // POST, with both post data in property and a get parameter in the url
 $.ajax({
-    method: 'POST',
-    url: 'http://localhost/php-cross-domain-proxy/test/echo.php?c=3',
-    data: {a:1, b:2},
+	method: 'POST',
+	url: 'http://localhost/php-cross-domain-proxy/test/echo.php?c=3',
+	data: {a:1, b:2},
 })
 </pre>
 
@@ -54,10 +54,10 @@ $.ajax({
 <pre contenteditable>
 // PUT, with data encoded as json
 $.ajax({
-    method: 'PUT',
-    url: 'http://localhost/php-cross-domain-proxy/test/echo.php',
-    contentType: 'application/json',
-    data: JSON.stringify({a:1, b:2}),
+	method: 'PUT',
+	url: 'http://localhost/php-cross-domain-proxy/test/echo.php',
+	contentType: 'application/json',
+	data: JSON.stringify({a:1, b:2}),
 })
 </pre>
 
@@ -65,8 +65,8 @@ $.ajax({
 <pre contenteditable>
 // DELETE, with get parameter
 $.ajax({
-    method: 'DELETE',
-    url: 'http://localhost/php-cross-domain-proxy/test/echo.php?id=1',
+	method: 'DELETE',
+	url: 'http://localhost/php-cross-domain-proxy/test/echo.php?id=1',
 })
 </pre>
 
