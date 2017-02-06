@@ -103,13 +103,24 @@ function onAjaxComplete(e, x, opts)
 
 function onPreKeydown(e)
 {
-	// CTRL+ENTER
-	if(e.ctrlKey && e.which == 13)
+	switch(e.which)
 	{
-		$(this)
-			.siblings('button.send')
-			.trigger('click');
-		return false;
+		// Enter + Ctrl
+		case 13:
+			if(e.ctrlKey)
+			{
+				$(this)
+					.siblings('button.send')
+					.trigger('click');
+				return false;
+			}
+			return true;
+
+		// Tab
+		case 9:
+			if( ! e.shiftKey)
+				document.execCommand('insertText', false, '	');
+			return false;
 	}
 	return true;
 }
