@@ -39,12 +39,12 @@ the [geekality/php-cross-domain-proxy](https://packagist.org/packages/geekality/
 And then for example add a `proxy.php` like this to your web application:
 
 ``` PHP
-	<?php
-		require 'vendor/autoload.php';
+<?php
+	require 'vendor/autoload.php';
 
-		CrossOriginProxy::proxy([
-			['host' => 'example.com'],
-		]);
+	Geekality\CrossOriginProxy::proxy([
+		['host' => 'example.com'],
+	]);
 
 ```
 
@@ -144,7 +144,7 @@ The requested URL must match at least one of the whitelisted criterias to be acc
 
 require 'vendor/autoload.php';
 
-CrossOriginProxy::proxy([
+Geekality\CrossOriginProxy::proxy([
 
 	// URL component matching
 	['host' => 'localhost'],
@@ -179,4 +179,20 @@ $.ajax({
 		var cookie = jqXHR.getResponseHeader('X-Proxy-Set-Cookie');
 	}
 })
+```
+
+cURL and zlib options
+---
+
+You can add options which will be appended to the options set when doing the request. You can also turn off zlib compression, which is enabled by default.
+
+``` PHP
+<?php
+	require 'vendor/autoload.php';
+
+	$whitelist = [...];
+	$opts = [CURLOPT_TIMEOUT => 5];
+	$zlib = 'Off'
+
+	Geekality\CrossOriginProxy::proxy($whitelist, $opts, $zlib);
 ```
