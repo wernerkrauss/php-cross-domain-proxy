@@ -1,6 +1,10 @@
 PHP Cross-Origin Proxy
 ===
 
+![Latest version](https://poser.pugx.org/geekality/php-cross-domain-proxy/version?format=flat-square)
+![Downloads](https://poser.pugx.org/geekality/php-cross-domain-proxy/downloads?format=flat-square)
+![License](https://poser.pugx.org/geekality/php-cross-domain-proxy/license?format=flat-square)
+
 Client-side HTTP requests, are limited by browser cross-origin restrictions.
 
 Preferably fixed by [enabling CORS](http://enable-cors.org/server.html) on the server you're trying to call, but sometimes this just isn't possible because reasons.
