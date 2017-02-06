@@ -112,7 +112,7 @@ $.ajax({
 
 ```
 
-When using `cache:false` jQuery adds a `_` GET parameter to the URL with the current timestamp to prevent the browser from returning a cached response. This happens *before* the `ajaxSend` event, so in the above case, if you had set `cache:false`, that `_` parameter would just be "moved" to the `X-Proxy-URL` header and no longer have any effect. Instead, leave `cache` at its default value `true`, and add the parameter manually to the proxy url instead, like in the example above.
+**Note** When using `cache:false` jQuery adds a `_` GET parameter to the URL with the current timestamp to prevent the browser from returning a cached response. This happens *before* the `ajaxSend` event, so in the above case, if you had set `cache:false`, that `_` parameter would just be "moved" to the `X-Proxy-URL` header and no longer have any effect. Instead, leave `cache` at its default value `true`, and add the parameter manually to the proxy url instead, like in the example above.
 
 *Some more examples can be found in [test/index.html](test/index.html).*
 
@@ -159,8 +159,13 @@ CrossOriginProxy::proxy([
 Cookies
 ---
 
-Cookies sent to the proxy will be ignored, since the browser will send the ones meant for the domain of the proxy, and not the cookies meant for the proxied resource. Don't want stuff to leak!
+Cookies sent to the proxy will be ignored, since the browser will send the ones meant for the domain of the proxy, and not the cookies meant for the proxied resource. So, if a request requires a certain cookie set, for example a session id, you can set the `X-Proxy-Cookie` header which is then used as `Cookie` header by the proxy. 
 
-If a request requires a certain cookie set, for example a session id, you can set the `X-Proxy-Cookie` header which is then used as `Cookie` header by the proxy.
-
-    X-Proxy-Cookie: jsessionid=AS348AF929FK219CKA9FK3B79870H;
+``` JAVASCRIPT
+$.ajax({
+    url: 'https://example.com',
+    headers: {
+        'X-Proxy-Cookie': 'jsessionid=AS348AF929FK219CKA9FK3B79870H;',
+    },
+})
+```
