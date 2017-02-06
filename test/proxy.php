@@ -26,4 +26,4 @@ if(isset($_GET['whitelist']))
 }
 
 // Call/Use the proxy
-Geekality\CrossOriginProxy::proxy($whitelist);
+Geekality\CrossOriginProxy::proxy($whitelist, [CURLOPT_TIMEOUT => 5]);

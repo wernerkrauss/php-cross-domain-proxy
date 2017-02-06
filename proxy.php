@@ -37,12 +37,15 @@ $curl = curl_init();
 $maxredirs = $opts[CURLOPT_MAXREDIRS] ?? 20;
 do
 {
-	// Set generic options
-	curl_setopt_array($curl, [
+	// Set options
+	curl_setopt_array($curl,
+		[
 			CURLOPT_URL => $url,
 			CURLOPT_HTTPHEADER => $headers,
 			CURLOPT_HEADER => true,
-		] + ($opts??[]) + [
+		]
+		+ ($curl_opts??[]) +
+		[
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_MAXREDIRS => $maxredirs,
 		]);
@@ -68,8 +71,21 @@ do
 
 	// Perform request
 	ob_start();
-	curl_exec($curl) or http_response_code(500) and exit(curl_error($curl));
+	curl_exec($curl);
 	$out = ob_get_clean();
+
+	// Light error handling
+	// http://php.net/manual/en/curl.constants.php#117723
+	if(curl_errno($curl))
+	switch(curl_errno($curl))
+	{
+		case 7:
+		case 28:
+			http_response_code(504);
+
+		default:
+			exit(curl_error($curl));
+	}
 
 	// HACK: If for any reason redirection doesn't work, do it manually...
 	$url = curl_getinfo($curl, CURLINFO_REDIRECT_URL);
