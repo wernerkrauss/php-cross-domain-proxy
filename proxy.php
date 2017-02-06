@@ -9,19 +9,20 @@ $cookie = $headers['X-Proxy-Cookie'] ?? null;
 
 // Check that we have a URL
 if( ! $url)
-	http_response_code(400) and exit("X-Proxy-Url header missing");
+	failure(400, "X-Proxy-Url header missing");
 
 // Check that the URL looks like an absolute URL
 if( ! parse_url($url, PHP_URL_SCHEME))
-	http_response_code(403) and exit("Not an absolute URL: $url");
+	failure(403, "Not an absolute URL: $url");
 
 // Check referer hostname
 if( ! parse_url($headers['Referer'] ?? null, PHP_URL_HOST) == $_SERVER['HTTP_HOST'])
-	http_response_code(403) and exit("Invalid referer");
+	failure(403, "Invalid referer");
 
 // Check whitelist, if not empty
 if( ! array_reduce($whitelist ?? [], 'is_bad', [$url, false]))
-	http_response_code(403) and exit("Not whitelisted: $url");
+	failure(403, "Not whitelisted: $url");
+
 
 
 // Remove ignored headers and prepare the rest for resending
@@ -31,6 +32,8 @@ if($cookie)
 	$headers['Cookie'] = $cookie;
 foreach($headers as $key => &$value)
 	$value = ucwords($key, '-').": $value";
+
+
 
 // Init curl
 $curl = curl_init();
@@ -79,12 +82,17 @@ do
 	if(curl_errno($curl))
 	switch(curl_errno($curl))
 	{
+		// Connect timeout => Service Unavailable
 		case 7:
-		case 28:
-			http_response_code(504);
+			failure(503, $curl);
 
+		// Operation timeout => Gateway Timeout
+		case 28:
+			failure(504, $curl);
+
+		// Other errors => Service Unavailable
 		default:
-			exit(curl_error($curl));
+			failure(503, $curl);
 	}
 
 	// HACK: If for any reason redirection doesn't work, do it manually...
@@ -93,9 +101,11 @@ do
 while($url and --$maxredirs > 0);
 
 
+
 // Get curl info and close handler
 $info = curl_getinfo($curl);
 curl_close($curl);
+
 
 
 // Remove any existing headers
@@ -124,6 +134,14 @@ echo $content;
 
 
 
+
+function failure(int $status, $text)
+{
+	if(is_resource($text))
+		$text = curl_error($text);
+	http_response_code($status);
+	exit($text);
+}
 
 function is_bad($carry, array $rule): bool
 {
