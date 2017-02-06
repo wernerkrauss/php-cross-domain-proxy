@@ -1,10 +1,17 @@
 <?php
 
+/**
+ * @param whitelist
+ * @param curl_opts
+ * @param zlib
+ */
+
 // Get stuff
 $headers = getallheaders();
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $url = $headers['X-Proxy-Url'] ?? null;
 $cookie = $headers['X-Proxy-Cookie'] ?? null;
+
 
 
 // Check that we have a URL
@@ -32,7 +39,6 @@ if($cookie)
 	$headers['Cookie'] = $cookie;
 foreach($headers as $key => &$value)
 	$value = ucwords($key, '-').": $value";
-
 
 
 // Init curl
@@ -78,7 +84,6 @@ do
 	$out = ob_get_clean();
 
 	// Light error handling
-	// http://php.net/manual/en/curl.constants.php#117723
 	if(curl_errno($curl))
 	switch(curl_errno($curl))
 	{
@@ -95,7 +100,7 @@ do
 			failure(503, $curl);
 	}
 
-	// HACK: If for any reason redirection doesn't work, do it manually...
+	// HACK: Workaround if not following, which happened once...
 	$url = curl_getinfo($curl, CURLINFO_REDIRECT_URL);
 }
 while($url and --$maxredirs > 0);
@@ -116,16 +121,18 @@ ini_set('zlib.output_compression', $zlib ?? 'On');
 
 // Get content and headers
 $content = substr($out, $info['header_size']);
-$header = substr($out, 0, $info['header_size']);
+$headers = substr($out, 0, $info['header_size']);
 
 // Rename Set-Cookie header
-$header = preg_replace('/^Set-Cookie:/im', 'X-Proxy-Set-Cookie:', $header);
+$headers = preg_replace('/^Set-Cookie:/im', 'X-Proxy-Set-Cookie:', $headers);
 
 // Output headers
-array_map('header', explode("\r\n", $header));
+foreach(explode("\r\n", $headers) as $h)
+	// HACK: Prevent chunked encoding issues (Issue #1)
+	if( ! preg_match('/^Transfer-Encoding:/i', $h))
+		header($h, false);
 
-// HACK: Prevent chunked encoding and gz issues (Issue #1)
-header_remove('Transfer-Encoding');
+// HACK: Prevent gzip issue (Issue #1)
 header('Content-Length: '.strlen($content), true);
 
 // Output content
