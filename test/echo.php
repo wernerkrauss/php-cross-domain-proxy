@@ -9,11 +9,11 @@ $info = [
 ];
 
 header_remove();
-ob_start('ob_gzhandler');
+ini_set('zlib.output_compression', 'On');
 header('Content-Type: application/json; charset=utf-8');
 header('X-Test-Header: This header should come back through');
 setcookie('Test-Cookie', uniqid());
 session_name('Test-Session');
 session_start();
 
-echo json_encode($info, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT);
+echo json_encode(array_filter($info), JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK | JSON_FORCE_OBJECT);

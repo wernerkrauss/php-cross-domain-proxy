@@ -84,8 +84,8 @@ curl_close($curl);
 // Remove any existing headers
 header_remove();
 
-// Use gz, if acceptable
-ob_start('ob_gzhandler');
+// Use zlib, if acceptable
+ini_set('zlib.output_compression', $zlib ?? 'On');
 
 // Output headers
 $header = substr($out, 0, $info['header_size']);
