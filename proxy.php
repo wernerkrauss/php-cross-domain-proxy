@@ -33,7 +33,13 @@ if( ! array_reduce($whitelist ?? [], 'is_bad', [$url, false]))
 
 
 // Remove ignored headers and prepare the rest for resending
-$ignore = ['cookie', 'host', 'x-proxy-url', 'x-proxy-cookie'];
+$ignore = [
+	'cookie',
+	'content-length',
+	'host',
+	'x-proxy-url',
+	'x-proxy-cookie',
+	];
 $headers = array_diff_key(array_change_key_case($headers), array_flip($ignore));
 if($cookie)
 	$headers['Cookie'] = $cookie;
