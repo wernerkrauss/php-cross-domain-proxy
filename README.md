@@ -192,7 +192,7 @@ You can add options which will be appended to the options set when doing the req
 
 	$whitelist = [...];
 	$opts = [CURLOPT_TIMEOUT => 5];
-	$zlib = 'Off'
+	$zlib = 'Off';
 
 	Geekality\CrossOriginProxy::proxy($whitelist, $opts, $zlib);
 ```
