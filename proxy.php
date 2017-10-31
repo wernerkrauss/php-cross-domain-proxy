@@ -17,7 +17,7 @@ if( ! isset($curl_timeout))
 // Get stuff
 $headers = getallheaders();
 $method = __('REQUEST_METHOD', $_SERVER);
-$url = __('X-Proxy-URL', $headers);
+$url = __('X-Proxy-Url', $headers);
 $cookie = __('X-Proxy-Cookie', $headers);
 
 // Check that we have a URL
